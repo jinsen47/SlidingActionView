@@ -1,4 +1,4 @@
-package com.jinsen47.view;
+package com.github.jinsen47.view;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -17,8 +17,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.github.jinsen47.util.BitmapUtil;
 import com.jinsen47.slidingactionview.R;
-import com.jinsen47.util.BitmapUtil;
 
 /**
  * Created by Jinsen on 15/12/26.

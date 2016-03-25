@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.jinsen47.view.SlidingActionView;
+import com.github.jinsen47.view.SlidingActionView;
 
 public class MainActivity extends AppCompatActivity {
 

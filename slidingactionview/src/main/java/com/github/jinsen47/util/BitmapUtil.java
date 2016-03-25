@@ -1,4 +1,4 @@
-package com.jinsen47.util;
+package com.github.jinsen47.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
