@@ -39,12 +39,12 @@ public class SlidingActionView extends View {
     private final int defaultAnimatorDuration = 200;
 
     private int strokeWidth = 6;
-    private int stokeColor = 0x66e0e0e0;
     private int actionLayerColor = Color.WHITE;
 
     private int mWidth;
     private int mHeight;
     private float ratio;
+    private float mDensity;
 
     // 中图片资源, 已经经过取圆处理
     private Bitmap centerActionLayerBitmap;
@@ -53,7 +53,7 @@ public class SlidingActionView extends View {
     // 中图片的位置区域
     private RectF centerRectF;
 
-    // 完成骑行 暂停骑行
+    // 左右文字
     private String leftMovingText = "暂停";
     private String rightMovingText = "停止";
 
@@ -99,6 +99,7 @@ public class SlidingActionView extends View {
 
     private void init(Context context, AttributeSet attrs) {
         isInitComplete = false;
+        mDensity = context.getResources().getDisplayMetrics().density;
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setAntiAlias(true);
@@ -129,7 +130,7 @@ public class SlidingActionView extends View {
                 postInvalidate();
             }
         };
-        layerDownAnimator = ValueAnimator.ofFloat(0, defaultWidth * getResources().getDisplayMetrics().density);
+        layerDownAnimator = ValueAnimator.ofFloat(0, defaultWidth * mDensity);
         layerDownAnimator.setDuration(defaultAnimatorDuration);
         layerDownAnimator.addUpdateListener(layerAnimatorUpdateListener);
         layerDownAnimator.addListener(new ValueAnimator.AnimatorListener() {
@@ -156,7 +157,7 @@ public class SlidingActionView extends View {
             }
         });
 
-        layerUpAnimator = ValueAnimator.ofFloat(defaultWidth * getResources().getDisplayMetrics().density, 0);
+        layerUpAnimator = ValueAnimator.ofFloat(defaultWidth * mDensity, 0);
         layerUpAnimator.setDuration(defaultAnimatorDuration);
         layerUpAnimator.addUpdateListener(layerAnimatorUpdateListener);
         layerUpAnimator.addListener(new ValueAnimator.AnimatorListener() {
@@ -185,18 +186,17 @@ public class SlidingActionView extends View {
     }
 
     private void initPath() {
-        float density = getResources().getDisplayMetrics().density;
         pathLeft = new Path();
-        pathLeft.moveTo(-60 * density, 0);
-        pathLeft.lineTo(-50 * density, 10 * density);
-        pathLeft.lineTo(-50 * density, -10 * density);
-        pathLeft.lineTo(-60 * density, 0);
+        pathLeft.moveTo(-60 * mDensity, 0);
+        pathLeft.lineTo(-50 * mDensity, 10 * mDensity);
+        pathLeft.lineTo(-50 * mDensity, -10 * mDensity);
+        pathLeft.lineTo(-60 * mDensity, 0);
 
         pathRight = new Path();
-        pathRight.moveTo(60 * density, 0);
-        pathRight.lineTo(50 * density, 10 * density);
-        pathRight.lineTo(50 * density, -10 * density);
-        pathRight.lineTo(60 * density, 0);
+        pathRight.moveTo(60 * mDensity, 0);
+        pathRight.lineTo(50 * mDensity, 10 * mDensity);
+        pathRight.lineTo(50 * mDensity, -10 * mDensity);
+        pathRight.lineTo(60 * mDensity, 0);
     }
 
     private void generateAndRunMovingCircleAnimator(float start) {
@@ -269,18 +269,11 @@ public class SlidingActionView extends View {
         // 画中间的icon
         canvas.save();
 
-        float density = getResources().getDisplayMetrics().density;
-        left = ((float) (-1 * defaultCenterDiameter * density / 2.0));
-        top = ((float) (-1 * defaultCenterDiameter * density / 2.0));
+        left = ((float) (-1 * defaultCenterDiameter * mDensity / 2.0));
+        top = ((float) (-1 * defaultCenterDiameter * mDensity / 2.0));
 
-        // 画描边
-//        canvas.clipRect(new Rect(left, top, left + defaultCenterDiameter, top + defaultCenterDiameter));
-//        mPaint.setColor(stokeColor);
-//        canvas.drawCircle(0, 0, defaultCenterDiameter / 2, mPaint);
-//        mPaint.setColor(Color.parseColor("#ffffff"));
-//        canvas.drawCircle(0, 0, defaultCenterDiameter / 2 - strokeWidth, mPaint);
         if (centerRectF == null) {
-            centerRectF = new RectF(left, top, left + defaultCenterDiameter * density, top + defaultCenterDiameter * density);
+            centerRectF = new RectF(left, top, left + defaultCenterDiameter * mDensity, top + defaultCenterDiameter * mDensity);
         }
         if (centerIconBitmap != null) {
             canvas.drawBitmap(centerIconBitmap, left, top, mPaint);
@@ -309,24 +302,22 @@ public class SlidingActionView extends View {
 
     private void drawActionLayerText(Canvas canvas) {
         canvas.save();
-        if (layerRectF.width() > 250 * getResources().getDisplayMetrics().density) {
+        if (layerRectF.width() > 250 * mDensity) {
             mPaint.setColor(defaultMovingTextColor);
-            mPaint.setTextSize(defaultMovingTextSize * getResources().getDisplayMetrics().density);
+            mPaint.setTextSize(defaultMovingTextSize * mDensity);
             mPaint.setTextAlign(Paint.Align.CENTER);
             Paint.FontMetricsInt font = mPaint.getFontMetricsInt();
 
             int baseline = font.bottom;
-            float density = getResources().getDisplayMetrics().density;
-            canvas.drawText(leftMovingText, -1 * density * defaultMovingTextOffset, baseline, mPaint);
-            canvas.drawText(rightMovingText, density * defaultMovingTextOffset, baseline, mPaint);
+            canvas.drawText(leftMovingText, -1 * mDensity * defaultMovingTextOffset, baseline, mPaint);
+            canvas.drawText(rightMovingText, mDensity * defaultMovingTextOffset, baseline, mPaint);
         }
         canvas.restore();
     }
 
     private void drawActionLayerTriangle(Canvas canvas) {
         canvas.save();
-        float density = getResources().getDisplayMetrics().density;
-        if (layerRectF.width() > 120 * density) {
+        if (layerRectF.width() > 120 * mDensity) {
             mPaint.setColor(0xffdddddd);
             mPaint.setStyle(Paint.Style.FILL);
             canvas.drawPath(pathLeft, mPaint);
@@ -340,9 +331,8 @@ public class SlidingActionView extends View {
         drawActionLayer(canvas);
         mPaint.setColor(defaultMovingCircleColor);
         float circleX = mMovingCircleOffsetX;
-        float density = getResources().getDisplayMetrics().density;
-        float border = mWidth / 2 - (defaultMovingCircleRadius * density + 20);
-        float radius = defaultMovingCircleRadius * density;
+        float border = mWidth / 2 - (defaultMovingCircleRadius * mDensity + 20);
+        float radius = defaultMovingCircleRadius * mDensity;
         if (circleX <= -1 * border || circleX >= border) {
             circleX = circleX < 0 ? -1 * border: border;
         }
@@ -361,8 +351,7 @@ public class SlidingActionView extends View {
                     if (mState != ActionState.MOVING) {
                         mState = ActionState.STANDBY;
                     } else {
-                        float density = getResources().getDisplayMetrics().density;
-                        float border = mWidth / 2 - (defaultMovingCircleRadius * density + 20);
+                        float border = mWidth / 2 - (defaultMovingCircleRadius * mDensity + 20);
                         if (mMovingCircleOffsetX <= -1 * border) {
                             if (mListener != null) {
                                 mListener.onLeftEdgeReached();
@@ -418,12 +407,13 @@ public class SlidingActionView extends View {
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
+        float density = getResources().getDisplayMetrics().density;
         if (widthMode == MeasureSpec.EXACTLY) {
             mWidth = widthSize;
         }
 
         if (widthMode == MeasureSpec.AT_MOST) {
-            mWidth = ((int) (defaultWidth * getContext().getResources().getDisplayMetrics().density));
+            mWidth = ((int) (defaultWidth * density));
         }
 
         if (heightMode == MeasureSpec.EXACTLY) {
@@ -431,7 +421,7 @@ public class SlidingActionView extends View {
         }
 
         if (heightMode == MeasureSpec.AT_MOST) {
-            mHeight = ((int) (defaultHeight * getContext().getResources().getDisplayMetrics().density));
+            mHeight = ((int) (defaultHeight * density));
         }
 
         if (mWidth / 3 > mHeight) {
@@ -439,7 +429,7 @@ public class SlidingActionView extends View {
         } else {
             mHeight = mWidth / 3;
         }
-        float density = getResources().getDisplayMetrics().density;
+
         ratio = widthSize / density / defaultWidth;
         setMeasuredDimension(mWidth, mHeight);
     }
