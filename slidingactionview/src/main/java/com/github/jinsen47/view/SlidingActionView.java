@@ -18,7 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.github.jinsen47.util.BitmapUtil;
-import com.jinsen47.slidingactionview.R;
+import com.github.jinsen47.slidingactionview.R;
 
 /**
  * Created by Jinsen on 15/12/26.

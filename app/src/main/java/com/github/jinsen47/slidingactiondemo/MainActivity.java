@@ -1,10 +1,11 @@
-package com.jinsen47.slidingactiondemo;
+package com.github.jinsen47.slidingactiondemo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.github.jinsen47.view.SlidingActionView;
+import com.jinsen47.slidingactiondemo.R;
 
 public class MainActivity extends AppCompatActivity {
 
